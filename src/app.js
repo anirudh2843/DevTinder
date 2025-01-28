@@ -1,31 +1,32 @@
 const express = require("express");
-
-const { adminAuth, userAuth } = require("./middleWares/auth");
-
+const connectDB = require("../config/database");
 const app = express();
+const User = require("../models/user");
 
-
-
-app.use("/user/login", (req, res) => {
-  res.send("Login successfully");
+app.post("/signup", async (req, res) => {
+  const user = new User({
+    firstName: "Anirudh",
+    lastName: "Domakonda",
+    password: "anirudh",
+    age: "20",
+    gender: "male",
+    emailId: "danirud4@gmail.com",
+  });
+  try {
+    user.save();
+    res.send("user added successsfully");
+  } catch (err) {
+    res.status(400).send("Error Saving the user :" + err.message);
+  }
 });
 
-
-app.use("/admin", adminAuth);
-
-app.use("/admin/getData",  (req, res, next) => {
-  res.send("data sent to safe user");
-});
-app.use("/admin/delete", (req, res) => {
-  res.send("deleted by safe user");
-});
-
-
-app.get("/user/data", userAuth, (req, res)=>{
-  res.send("data is visible to user");
-})
-
-
-app.listen(3333, () => {
-  console.log("server is successfully listenning  on port  ");
-});
+connectDB()
+  .then(() => {
+    console.log("connection successfull");
+    app.listen(3333, () => {
+      console.log("server is successfully listenning  on port  ");
+    });
+  })
+  .catch((err) => {
+    console.log("connection failed");
+  });
