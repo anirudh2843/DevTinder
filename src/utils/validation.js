@@ -18,8 +18,26 @@ const validateSignUpData = (req) => {
       minSymbols: 1,
     })
   ) {
-    throw new Error("Please enter a strong password (min 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 symbol)");
+    throw new Error(
+      "Please enter a strong password (min 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 symbol)"
+    );
   }
 };
 
-module.exports = { validateSignUpData };
+const validateEditProfileData = (req) => {
+  const allowedEditFields = [
+    "firstName",
+    "lastName",
+    "emailId",
+    "photoUrl",
+    "gender",
+    "age",
+    "about",
+    "skills",
+  ];
+  return Object.keys(req.body).every((field) =>
+    allowedEditFields.includes(field)
+  );
+};
+
+module.exports = { validateSignUpData, validateEditProfileData };
